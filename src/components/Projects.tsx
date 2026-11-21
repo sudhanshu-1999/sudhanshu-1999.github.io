@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
-import { ArrowUpRight, Lock } from "lucide-react";
+import { ArrowUpRight, ExternalLink, Lock } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { projects, type Project } from "@/content/site";
 import { FlowStrip } from "./FlowStrip";
@@ -144,6 +144,16 @@ export function Projects() {
                           >
                             Read case study <ArrowUpRight className="h-3.5 w-3.5" />
                           </button>
+                          {p.demo && (
+                            <a
+                              href={p.demo}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-cyan/40 bg-cyan/[0.06] px-3.5 py-2 text-[13px] text-text transition hover:border-cyan/70"
+                            >
+                              <ExternalLink className="h-3.5 w-3.5" /> Live demo
+                            </a>
+                          )}
                           {p.github ? (
                             <a
                               href={p.github}
@@ -155,7 +165,7 @@ export function Projects() {
                             </a>
                           ) : (
                             <span className="inline-flex items-center gap-1.5 px-2 py-2 font-mono text-[11px] text-faint">
-                              <Lock className="h-3 w-3" /> repo link coming soon
+                              <Lock className="h-3 w-3" /> {p.codeNote ?? "repo link coming soon"}
                             </span>
                           )}
                         </div>

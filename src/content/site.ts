@@ -120,7 +120,8 @@ export const skillGroups: SkillGroup[] = [
       { name: "GitLab" },
       { name: "Next.js & TypeScript", where: "Voyager Live Tracker, this site" },
       { name: "Three.js / React Three Fiber", where: "Voyager Live Tracker" },
-      { name: "GitHub Actions", where: "Scheduled Pages deploys" },
+      { name: "GitHub Actions", where: "This site's Pages deploys" },
+      { name: "Vercel", where: "Voyager Live Tracker" },
       { name: "Salesforce Platform", where: "Apex, LWC, Flows · 3 certifications" },
       { name: "VS Code" },
       { name: "Jupyter Notebook" },
@@ -147,6 +148,7 @@ export type Project = {
   stack: string[];
   github?: string; // only real, verified URLs
   demo?: string;
+  codeNote?: string; // shown instead of a code link, e.g. for a private repo
   metrics?: Metric[];
   metricsNote?: string;
   accent: "cyan" | "violet" | "blue";
@@ -330,16 +332,16 @@ export const projects: Project[] = [
       "Three self-contained React Three Fiber views (spacecraft, solar system, Earth) with floating-origin scaling to keep precision at astronomical distances; real NASA 3D models compressed with Draco and loaded lazily.",
       "Live Deep Space Network contacts parsed from NASA's DSN Now feed; active-satellite orbits from CelesTrak propagated with SGP4 inside a Web Worker.",
       "Shareable deep links that restore the view and moment, a Q&A panel that answers with live figures, and a sources page crediting every dataset.",
-      "Hosted as a static site on GitHub Pages: server routes became build-time data files refreshed by a scheduled GitHub Actions rebuild, while the browser calls NASA's DSN feed directly.",
+      "Deployed on Vercel: Next.js server routes proxy JPL Horizons, NASA DSN Now and CelesTrak behind CDN caching, and every push to main redeploys automatically.",
     ],
     challenges: [
-      "Sources that cannot be called from a browser — JPL Horizons blocks cross-origin requests, so the static build fetches it ahead of time and falls back to the offline model outside that window.",
+      "Sources that cannot be called from a browser — JPL Horizons blocks cross-origin requests, so a server route fetches it and the CDN shares one cached copy, with the offline orbit model as a fallback.",
       "Respecting upstream limits — shared CDN caching so NASA sees at most one request per interval however many people watch, and cache-aware fallbacks when CelesTrak rate-limits.",
       "Keeping a heavy 3D app fast — lazy-loaded assets, compressed models and long-lived caching for static data.",
     ],
-    stack: ["Next.js", "TypeScript", "React Three Fiber", "Three.js", "Zustand", "satellite.js", "Web Workers", "Tailwind CSS", "GitHub Actions"],
-    github: "https://github.com/sudhanshu-1999/voyager-tracker",
-    demo: "https://sudhanshu-1999.github.io/voyager-tracker/",
+    stack: ["Next.js", "TypeScript", "React Three Fiber", "Three.js", "Zustand", "satellite.js", "Web Workers", "Tailwind CSS", "Vercel"],
+    demo: "https://voyager-live-tracker.vercel.app",
+    codeNote: "source code is private",
     accent: "blue",
   },
 ];

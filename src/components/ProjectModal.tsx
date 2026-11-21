@@ -105,7 +105,7 @@ export function ProjectModal({ project, onClose }: { project: Project | null; on
                   </a>
                 ) : (
                   <span className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-line-strong px-3.5 py-2 font-mono text-[11.5px] text-faint">
-                    <Lock className="h-3 w-3" /> GitHub link: coming soon
+                    <Lock className="h-3 w-3" /> {project.codeNote ?? "GitHub link: coming soon"}
                   </span>
                 )}
                 {project.demo ? (
