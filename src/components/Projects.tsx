@@ -12,7 +12,7 @@ import { SectionHeader } from "./ui/SectionHeader";
 import { Reveal } from "./ui/Reveal";
 import { onSpotlightMove } from "./ui/useSpotlight";
 
-const filters = ["All", "AI Platform", "Document AI", "Computer Vision", "Enterprise"] as const;
+const filters = ["All", "AI Platform", "Document AI", "Computer Vision", "Full-Stack", "Enterprise"] as const;
 
 const glow = {
   cyan: "bg-[radial-gradient(closest-side,rgba(34,211,238,0.14),transparent)]",

@@ -118,6 +118,9 @@ export const skillGroups: SkillGroup[] = [
     skills: [
       { name: "Git" },
       { name: "GitLab" },
+      { name: "Next.js & TypeScript", where: "Voyager Live Tracker, this site" },
+      { name: "Three.js / React Three Fiber", where: "Voyager Live Tracker" },
+      { name: "GitHub Actions", where: "Scheduled Pages deploys" },
       { name: "Salesforce Platform", where: "Apex, LWC, Flows · 3 certifications" },
       { name: "VS Code" },
       { name: "Jupyter Notebook" },
@@ -134,7 +137,7 @@ export type Project = {
   title: string;
   kicker: string;
   year: string;
-  category: "AI Platform" | "Computer Vision" | "Document AI" | "Enterprise";
+  category: "AI Platform" | "Computer Vision" | "Document AI" | "Full-Stack" | "Enterprise";
   summary: string;
   context?: string;
   problem: string;
@@ -301,6 +304,43 @@ export const projects: Project[] = [
     ],
     stack: ["Apex", "Lightning Web Components", "Flows", "Salesforce APIs", "Java", "Python", "FastAPI", "ChromaDB", "FAISS"],
     accent: "violet",
+  },
+  {
+    slug: "voyager-tracker",
+    index: "06",
+    title: "Voyager Live Tracker",
+    kicker: "Real-time 3D tracker for Voyager 1 and 2, on NASA data",
+    year: "2026",
+    category: "Full-Stack",
+    summary:
+      "A NASA-documentary-style web app: real distance and light-time to Voyager 1 and 2 from JPL Horizons, interactive 3D views of the spacecraft, Earth and solar system, live Deep Space Network contact, and a signal simulation that sends a message at the true speed of light.",
+    problem:
+      "Public data about the Voyagers is scattered across NASA services with different formats, rate limits and browser restrictions. The goal was one fast, honest page: real numbers, clearly sourced, that keeps working when a source is slow or down.",
+    architecture: [
+      "JPL Horizons",
+      "Ephemeris loader",
+      "Hermite interpolation",
+      "Sim clock store",
+      "React Three Fiber scenes",
+      "HUD + share links",
+    ],
+    implementation: [
+      "Ephemerides from JPL Horizons with bounded concurrency and retry-with-backoff (Horizons rejects bursts), hourly samples interpolated with Hermite splines, and an offline orbit model that takes over per body when Horizons fails.",
+      "A simulation clock held as an anchor plus speed rather than written every frame, so every time-dependent view works at any playback speed, including jumps to historical mission events.",
+      "Three self-contained React Three Fiber views (spacecraft, solar system, Earth) with floating-origin scaling to keep precision at astronomical distances; real NASA 3D models compressed with Draco and loaded lazily.",
+      "Live Deep Space Network contacts parsed from NASA's DSN Now feed; active-satellite orbits from CelesTrak propagated with SGP4 inside a Web Worker.",
+      "Shareable deep links that restore the view and moment, a Q&A panel that answers with live figures, and a sources page crediting every dataset.",
+      "Hosted as a static site on GitHub Pages: server routes became build-time data files refreshed by a scheduled GitHub Actions rebuild, while the browser calls NASA's DSN feed directly.",
+    ],
+    challenges: [
+      "Sources that cannot be called from a browser — JPL Horizons blocks cross-origin requests, so the static build fetches it ahead of time and falls back to the offline model outside that window.",
+      "Respecting upstream limits — shared CDN caching so NASA sees at most one request per interval however many people watch, and cache-aware fallbacks when CelesTrak rate-limits.",
+      "Keeping a heavy 3D app fast — lazy-loaded assets, compressed models and long-lived caching for static data.",
+    ],
+    stack: ["Next.js", "TypeScript", "React Three Fiber", "Three.js", "Zustand", "satellite.js", "Web Workers", "Tailwind CSS", "GitHub Actions"],
+    github: "https://github.com/sudhanshu-1999/voyager-tracker",
+    demo: "https://sudhanshu-1999.github.io/voyager-tracker/",
+    accent: "blue",
   },
 ];
 
