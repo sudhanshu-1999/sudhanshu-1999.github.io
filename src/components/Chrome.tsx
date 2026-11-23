@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 export function ScrollProgress() {
   const { scrollYProgress } = useScroll();
   const x = useSpring(scrollYProgress, { stiffness: 120, damping: 24, mass: 0.3 });
-  return <motion.div aria-hidden="true" className="fixed inset-x-0 top-0 z-[70] h-[2px] origin-left bg-gradient-to-r from-cyan via-blue to-violet" style={{ scaleX: x }} />;
+  return <motion.div aria-hidden="true" className="fixed inset-x-0 top-0 z-[70] h-[3px] origin-left bg-gradient-to-r from-red via-orange to-gold" style={{ scaleX: x }} />;
 }
 
 export function BackToTop() {
@@ -28,7 +28,7 @@ export function BackToTop() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 12 }}
-          className="glass fixed bottom-5 right-5 z-40 grid h-11 w-11 place-items-center rounded-full text-text transition hover:border-cyan/50"
+          className="fixed bottom-5 right-5 z-40 grid h-11 w-11 place-items-center border-2 border-ink bg-gold text-ink shadow-[4px_4px_0_0_var(--red)] transition hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--red)]"
         >
           <ArrowUp className="h-4 w-4" />
         </motion.a>
@@ -66,14 +66,14 @@ export function Loader() {
         >
           <div className="w-56">
             <div className="mb-4 flex items-center gap-2.5">
-              <span className="grid h-8 w-8 place-items-center rounded-lg border border-line-strong font-mono text-[12px] font-semibold text-text">SS</span>
+              <span className="grid h-8 w-8 place-items-center border-2 border-ink bg-gold font-mono text-[12px] font-bold text-ink">SS</span>
               <span className="text-sm text-text">Sudhanshu Singh</span>
             </div>
             <div className="h-px w-full overflow-hidden bg-line">
-              <div className="loader-bar h-full bg-gradient-to-r from-cyan to-violet" />
+              <div className="loader-bar h-full bg-gradient-to-r from-red to-gold" />
             </div>
             <p className="mt-3 font-mono text-[11px] text-faint">
-              <span className="text-cyan">›</span> {lines[line]}
+              <span className="text-gold">›</span> {lines[line]}
             </p>
           </div>
         </motion.div>

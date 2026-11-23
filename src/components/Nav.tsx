@@ -46,16 +46,16 @@ export function Nav() {
       </a>
       <nav
         aria-label="Primary"
-        className={`flex w-full max-w-6xl items-center justify-between rounded-2xl px-3 py-2 transition-all duration-500 ${
-          scrolled ? "glass shadow-[0_10px_40px_-20px_rgba(0,0,0,0.8)]" : "border border-transparent"
+        className={`flex w-full max-w-6xl items-center justify-between px-3 py-2 transition-all duration-300 ${
+          scrolled ? "border-2 border-ink bg-graphite shadow-[5px_5px_0_0_var(--red)]" : "border-2 border-ink/70 bg-graphite/90 shadow-[3px_3px_0_0_var(--ink)]"
         }`}
       >
         <a href="#top" className="group flex items-center gap-2.5 rounded-lg px-2 py-1" aria-label="Sudhanshu Singh, back to top">
-          <span className="relative grid h-7 w-7 place-items-center rounded-lg border border-line-strong bg-bg-2 font-mono text-[11px] font-semibold text-text">
+          <span className="relative grid h-8 w-8 place-items-center bg-gold font-mono text-[12px] font-extrabold text-ink [clip-path:polygon(0_0,calc(100%-8px)_0,100%_8px,100%_100%,8px_100%,0_calc(100%-8px))]">
             SS
-            <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-cyan" />
+            <span className="absolute bottom-1 left-1 h-1 w-1 bg-red" />
           </span>
-          <span className="hidden text-sm font-medium tracking-tight text-text sm:block">Sudhanshu Singh</span>
+          <span className="hidden font-display text-sm font-semibold tracking-tight text-text sm:block">Sudhanshu Singh</span>
         </a>
 
         <ul className="hidden items-center gap-1 md:flex">
@@ -64,14 +64,19 @@ export function Nav() {
               <a
                 href={`#${n.id}`}
                 aria-current={active === n.id ? "true" : undefined}
-                className={`relative rounded-lg px-3 py-1.5 text-[13px] transition-colors ${
-                  active === n.id ? "text-text" : "text-muted hover:text-text"
+                className={`group relative z-0 block px-3.5 py-2 text-[13px] transition-colors ${
+                  active === n.id ? "text-ink font-semibold" : "text-muted hover:text-text"
                 }`}
               >
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-3 bottom-0 h-[3px] origin-left scale-x-0 bg-red transition-transform duration-300 group-hover:scale-x-100"
+                />
                 {active === n.id && (
                   <motion.span
-                    layoutId="nav-pill"
-                    className="absolute inset-0 -z-10 rounded-lg bg-white/[0.06]"
+                    layoutId="nav-block"
+                    aria-hidden="true"
+                    className="absolute inset-0 -z-10 -skew-x-12 border-2 border-ink bg-gold shadow-[3px_3px_0_0_var(--red)]"
                     transition={{ type: "spring", stiffness: 380, damping: 32 }}
                   />
                 )}
@@ -85,14 +90,14 @@ export function Nav() {
           <a
             href={site.resume}
             download="Sudhanshu_Singh_Resume.pdf"
-            className="hidden items-center gap-1.5 rounded-lg border border-line-strong bg-white/[0.03] px-3 py-1.5 text-[13px] text-text transition hover:border-cyan/50 hover:bg-cyan/[0.06] sm:inline-flex"
+            className="hidden min-h-9 items-center gap-1.5 border-2 border-line-strong px-3 font-semibold text-[13px] text-text transition hover:border-gold hover:bg-gold hover:text-ink sm:inline-flex"
           >
             <Download className="h-3.5 w-3.5" /> Resume
           </a>
           <button
             type="button"
             onClick={() => setOpen((o) => !o)}
-            className="grid h-9 w-9 place-items-center rounded-lg border border-line text-text md:hidden"
+            className="grid h-11 w-11 place-items-center border-2 border-line-strong text-text md:hidden"
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? "Close menu" : "Open menu"}
@@ -110,7 +115,7 @@ export function Nav() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="glass absolute inset-x-4 top-[72px] rounded-2xl p-2 md:hidden"
+            className="absolute inset-x-4 top-[72px] border-2 border-ink bg-graphite p-2 shadow-[6px_6px_0_0_var(--red)] md:hidden"
           >
             <ul>
               {nav.map((n) => (
@@ -118,7 +123,7 @@ export function Nav() {
                   <a
                     href={`#${n.id}`}
                     onClick={() => setOpen(false)}
-                    className="block rounded-xl px-4 py-3 text-[15px] text-text hover:bg-white/5"
+                    className="block rounded-md px-4 py-3 text-[15px] text-text transition-colors hover:bg-gold hover:text-ink"
                   >
                     {n.label}
                   </a>
@@ -128,7 +133,7 @@ export function Nav() {
                 <a
                   href={site.resume}
                   download="Sudhanshu_Singh_Resume.pdf"
-                  className="mt-1 flex items-center gap-2 rounded-xl px-4 py-3 text-[15px] text-cyan hover:bg-white/5"
+                  className="mt-1 flex items-center gap-2 px-4 py-3 text-[15px] font-semibold text-gold transition-colors hover:bg-gold hover:text-ink"
                 >
                   <Download className="h-4 w-4" /> Download resume
                 </a>

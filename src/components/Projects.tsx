@@ -10,15 +10,13 @@ import { ProjectModal } from "./ProjectModal";
 import { GithubIcon } from "./ui/BrandIcons";
 import { SectionHeader } from "./ui/SectionHeader";
 import { Reveal } from "./ui/Reveal";
-import { onSpotlightMove } from "./ui/useSpotlight";
+import { tiltHandlers } from "./ui/useTilt";
 
 const filters = ["All", "AI Platform", "Document AI", "Computer Vision", "Full-Stack", "Enterprise"] as const;
 
-const glow = {
-  cyan: "bg-[radial-gradient(closest-side,rgba(34,211,238,0.14),transparent)]",
-  violet: "bg-[radial-gradient(closest-side,rgba(139,92,246,0.16),transparent)]",
-  blue: "bg-[radial-gradient(closest-side,rgba(59,130,246,0.15),transparent)]",
-};
+const tilt = tiltHandlers(4);
+
+const accentBg = { cyan: "bg-blue", violet: "bg-orange", blue: "bg-gold" } as const;
 
 export function Projects() {
   const [filter, setFilter] = useState<(typeof filters)[number]>("All");
@@ -52,11 +50,13 @@ export function Projects() {
   }, []);
 
   return (
-    <section id="work" className="relative py-28 md:py-36">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-line-strong to-transparent" />
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+    <section id="work" className="relative overflow-hidden bg-red py-20 md:py-28">
+      <div aria-hidden="true" className="halftone pointer-events-none absolute inset-0 text-ink/30" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-0 hidden h-full w-40 -skew-x-12 bg-orange/70 lg:block" />
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeader
           index="03"
+          tone="red"
           eyebrow="Featured work"
           title={
             <>
@@ -67,7 +67,7 @@ export function Projects() {
         />
 
         <Reveal>
-          <div role="group" aria-label="Filter projects" className="-mx-4 mb-10 flex gap-2 overflow-x-auto px-4 pb-1">
+          <div role="group" aria-label="Filter projects" className="-mx-4 mb-12 flex gap-3 overflow-x-auto px-4 pb-2">
             <LayoutGroup id="filters">
               {filters.map((f) => {
                 const on = f === filter;
@@ -78,13 +78,13 @@ export function Projects() {
                     type="button"
                     aria-pressed={on}
                     onClick={() => setFilter(f)}
-                    className={`relative shrink-0 rounded-full border px-4 py-1.5 text-[13px] transition-colors ${
-                      on ? "border-transparent text-bg" : "border-line text-muted hover:border-line-strong hover:text-text"
+                    className={`relative shrink-0 border-2 px-4 py-2 text-[13px] font-semibold transition-colors ${
+                      on ? "border-ink text-ivory" : "border-white/60 text-white hover:border-ink hover:bg-ink/15"
                     }`}
                   >
-                    {on && <motion.span layoutId="filter-pill" className="absolute inset-0 -z-10 rounded-full bg-text" transition={{ type: "spring", stiffness: 400, damping: 34 }} />}
+                    {on && <motion.span layoutId="filter-pill" aria-hidden="true" className="absolute inset-0 -z-10 bg-ink shadow-[4px_4px_0_0_var(--gold)]" transition={{ type: "spring", stiffness: 400, damping: 34 }} />}
                     {f}
-                    <span className={`ml-1.5 font-mono text-[10.5px] ${on ? "text-bg/60" : "text-faint"}`}>{count}</span>
+                    <span className={`ml-1.5 font-mono text-[10.5px] ${on ? "text-gold" : "text-white/80"}`}>{count}</span>
                   </button>
                 );
               })}
@@ -92,7 +92,7 @@ export function Projects() {
           </div>
         </Reveal>
 
-        <motion.ul layout className="grid gap-5 md:grid-cols-2">
+        <motion.ul layout className="grid gap-9 md:grid-cols-2">
           <AnimatePresence mode="popLayout" initial={false}>
             {list.map((p, i) => {
               const feature = filter === "All" && (i === 0 || i === 1);
@@ -106,93 +106,108 @@ export function Projects() {
                   transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                   className={feature ? "md:col-span-2" : ""}
                 >
-                  <article
-                    onPointerMove={onSpotlightMove}
-                    className="card spotlight group relative h-full overflow-hidden rounded-2xl p-6 transition-transform duration-500 hover:-translate-y-1 md:p-8"
-                  >
-                    <div aria-hidden="true" className={`pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full opacity-70 transition-opacity duration-500 group-hover:opacity-100 ${glow[p.accent]}`} />
+                  <div {...tilt} className="tilt frame group relative h-full [filter:drop-shadow(9px_9px_0_var(--ink))]">
+                    <article
+                      className={`relative h-full overflow-hidden p-6 [clip-path:polygon(0_0,calc(100%-34px)_0,100%_34px,100%_100%,0_100%)] md:p-8 ${
+                        feature ? "bg-ivory text-ink" : "bg-graphite text-text"
+                      }`}
+                    >
+                      <span aria-hidden="true" className={`absolute right-0 top-0 h-[34px] w-[34px] ${accentBg[p.accent]} [clip-path:polygon(0_0,100%_100%,0_100%)]`} />
+                      <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-2 ${accentBg[p.accent]}`} />
+                      <div className="shine" aria-hidden="true" />
 
-                    <div className={`relative grid gap-8 ${feature ? "lg:grid-cols-[1.1fr_1fr] lg:gap-12" : ""}`}>
-                      <div className="flex flex-col">
-                        <div className="flex items-center gap-3 font-mono text-[11px] text-faint">
-                          <span className="text-cyan">{p.index}</span>
-                          <span className="h-px w-6 bg-line-strong" />
-                          <span>{p.category}</span>
-                          <span className="ml-auto">{p.year}</span>
-                        </div>
-                        <h3 className="mt-5 text-2xl font-semibold tracking-tight text-text md:text-[1.75rem]">{p.title}</h3>
-                        <p className="mt-1.5 text-[15px] text-muted">{p.kicker}</p>
-                        <p className="mt-4 text-pretty leading-relaxed text-text/75">{p.summary}</p>
-
-                        <ul className="mt-5 flex flex-wrap gap-1.5" aria-label="Tech stack">
-                          {p.stack.slice(0, feature ? 9 : 6).map((s) => (
-                            <li key={s} className="rounded-md border border-line px-2 py-0.5 font-mono text-[11px] text-muted">
-                              {s}
-                            </li>
-                          ))}
-                          {p.stack.length > (feature ? 9 : 6) && (
-                            <li className="px-1 py-0.5 font-mono text-[11px] text-faint">+{p.stack.length - (feature ? 9 : 6)}</li>
-                          )}
-                        </ul>
-
-                        <div className="mt-auto flex flex-wrap items-center gap-2 pt-7">
-                          <button
-                            type="button"
-                            onClick={() => openProject(p)}
-                            className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.06] px-3.5 py-2 text-[13px] font-medium text-text transition hover:bg-white/[0.1]"
-                            aria-haspopup="dialog"
-                          >
-                            Read case study <ArrowUpRight className="h-3.5 w-3.5" />
-                          </button>
-                          {p.demo && (
-                            <a
-                              href={p.demo}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="inline-flex items-center gap-1.5 rounded-lg border border-cyan/40 bg-cyan/[0.06] px-3.5 py-2 text-[13px] text-text transition hover:border-cyan/70"
-                            >
-                              <ExternalLink className="h-3.5 w-3.5" /> Live demo
-                            </a>
-                          )}
-                          {p.github ? (
-                            <a
-                              href={p.github}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="inline-flex items-center gap-1.5 rounded-lg border border-line px-3.5 py-2 text-[13px] text-muted transition hover:border-line-strong hover:text-text"
-                            >
-                              <GithubIcon className="h-3.5 w-3.5" /> Code
-                            </a>
-                          ) : (
-                            <span className="inline-flex items-center gap-1.5 px-2 py-2 font-mono text-[11px] text-faint">
-                              <Lock className="h-3 w-3" /> {p.codeNote ?? "repo link coming soon"}
+                      <div className={`relative grid gap-8 ${feature ? "lg:grid-cols-[1.1fr_1fr] lg:gap-12" : ""}`}>
+                        <div className="flex flex-col">
+                          <div className={`flex items-center gap-3 font-mono text-[11px] ${feature ? "text-ink/70" : "text-faint"}`}>
+                            <span className={`tag ${accentBg[p.accent]} text-ink`}>
+                              <span>{p.index}</span>
                             </span>
-                          )}
-                        </div>
-                      </div>
+                            <span>{p.category}</span>
+                            <span className="ml-auto">{p.year}</span>
+                          </div>
+                          <h3 className="mt-5 text-[1.7rem] font-extrabold leading-tight tracking-[-0.02em] md:text-[2.1rem]">{p.title}</h3>
+                          <p className={`mt-1.5 text-[15px] font-medium ${feature ? "text-ink/75" : "text-muted"}`}>{p.kicker}</p>
+                          <p className={`mt-4 text-pretty leading-relaxed ${feature ? "text-ink/85" : "text-text/80"}`}>{p.summary}</p>
 
-                      {feature && (
-                        <div className="flex flex-col justify-center gap-5 rounded-xl border border-line bg-bg/40 p-5">
-                          {p.metrics ? (
-                            <>
-                              <p className="eyebrow">Model performance</p>
-                              <MetricRings metrics={p.metrics} note={p.metricsNote} />
-                            </>
-                          ) : (
-                            <>
-                              <p className="eyebrow">Data path</p>
-                              <FlowStrip steps={p.architecture} accent={p.accent} vertical />
-                            </>
-                          )}
+                          <ul className="mt-5 flex flex-wrap gap-1.5" aria-label="Tech stack">
+                            {p.stack.slice(0, feature ? 9 : 6).map((s) => (
+                              <li
+                                key={s}
+                                className={`border-2 px-2 py-0.5 font-mono text-[11px] font-medium ${feature ? "border-ink text-ink" : "border-line-strong text-muted"}`}
+                              >
+                                {s}
+                              </li>
+                            ))}
+                            {p.stack.length > (feature ? 9 : 6) && (
+                              <li className={`px-1 py-0.5 font-mono text-[11px] ${feature ? "text-ink/60" : "text-faint"}`}>+{p.stack.length - (feature ? 9 : 6)}</li>
+                            )}
+                          </ul>
+
+                          <div className="mt-auto flex flex-wrap items-center gap-3 pt-7">
+                            <button
+                              type="button"
+                              onClick={() => openProject(p)}
+                              className={`inline-flex min-h-11 items-center gap-1.5 border-2 border-ink px-4 py-2 text-[13px] font-bold shadow-[4px_4px_0_0_var(--red)] transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 ${
+                                feature ? "bg-ink text-ivory" : "bg-gold text-ink"
+                              }`}
+                              aria-haspopup="dialog"
+                            >
+                              Read case study <ArrowUpRight className="h-3.5 w-3.5" />
+                            </button>
+                            {p.demo && (
+                              <a
+                                href={p.demo}
+                                target="_blank"
+                                rel="noreferrer"
+                                className={`inline-flex min-h-11 items-center gap-1.5 border-2 px-4 py-2 text-[13px] font-semibold transition-colors ${
+                                  feature ? "border-ink text-ink hover:bg-gold" : "border-gold text-gold hover:bg-gold hover:text-ink"
+                                }`}
+                              >
+                                <ExternalLink className="h-3.5 w-3.5" /> Live demo
+                              </a>
+                            )}
+                            {p.github ? (
+                              <a
+                                href={p.github}
+                                target="_blank"
+                                rel="noreferrer"
+                                className={`inline-flex min-h-11 items-center gap-1.5 border-2 px-4 py-2 text-[13px] font-semibold transition-colors ${
+                                  feature ? "border-ink/40 text-ink hover:border-ink" : "border-line-strong text-muted hover:border-ivory hover:text-text"
+                                }`}
+                              >
+                                <GithubIcon className="h-3.5 w-3.5" /> Code
+                              </a>
+                            ) : (
+                              <span className={`inline-flex items-center gap-1.5 px-1 py-2 font-mono text-[11px] ${feature ? "text-ink/65" : "text-faint"}`}>
+                                <Lock className="h-3 w-3" /> {p.codeNote ?? "repo link coming soon"}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                      )}
-                      {!feature && (
-                        <div className="-mt-2">
-                          <FlowStrip steps={p.architecture} accent={p.accent} compact />
-                        </div>
-                      )}
-                    </div>
-                  </article>
+
+                        {feature && (
+                          <div className="flex flex-col justify-center gap-5 bg-ink p-5 text-text">
+                            {p.metrics ? (
+                              <>
+                                <p className="eyebrow text-gold">Model performance</p>
+                                <MetricRings metrics={p.metrics} note={p.metricsNote} />
+                              </>
+                            ) : (
+                              <>
+                                <p className="eyebrow text-gold">Data path</p>
+                                <FlowStrip steps={p.architecture} accent={p.accent} vertical />
+                              </>
+                            )}
+                          </div>
+                        )}
+                        {!feature && (
+                          <div className="-mt-2">
+                            <FlowStrip steps={p.architecture} accent={p.accent} compact />
+                          </div>
+                        )}
+                      </div>
+                    </article>
+                  </div>
                 </motion.li>
               );
             })}

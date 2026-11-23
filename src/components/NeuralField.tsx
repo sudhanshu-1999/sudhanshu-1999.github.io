@@ -32,7 +32,7 @@ export function NeuralField() {
     const box = wrap.current!;
     const ctx = el.getContext("2d")!;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const mono = getComputedStyle(document.documentElement).getPropertyValue("--font-geist-mono").trim() || "ui-monospace, monospace";
+    const mono = getComputedStyle(document.documentElement).getPropertyValue("--font-plex-mono").trim() || "ui-monospace, monospace";
 
     let w = 0, h = 0, dpr = 1;
     let nodes: Node[][] = [];
@@ -70,8 +70,8 @@ export function NeuralField() {
     };
 
     const color = (k: number, a: number) => {
-      // cyan → blue → violet across the depth of the network
-      const stops = [[34, 211, 238], [59, 130, 246], [139, 92, 246]];
+      // electric blue → reactor orange → gold across the depth of the network
+      const stops = [[40, 191, 255], [255, 107, 53], [255, 194, 71]];
       const s = k * 2, i = Math.min(1, Math.floor(s)), f = s - i;
       const c = stops[i].map((v, j) => Math.round(v + (stops[i + 1][j] - v) * f));
       return `rgba(${c[0]},${c[1]},${c[2]},${a})`;
@@ -104,7 +104,7 @@ export function NeuralField() {
       for (let l = 0; l < nodes.length - 1; l++) {
         for (const a of nodes[l]) for (const b of nodes[l + 1]) {
           const lit = hot && (hot === a || hot === b);
-          ctx.strokeStyle = lit ? color(l / (nodes.length - 2), 0.55) : "rgba(148,163,184,0.055)";
+          ctx.strokeStyle = lit ? color(l / (nodes.length - 2), 0.55) : "rgba(245,240,230,0.08)";
           ctx.lineWidth = lit ? 1.1 : 0.6;
           ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
         }
@@ -119,7 +119,7 @@ export function NeuralField() {
           const a = col[i], b = col[j];
           const strength = 0.06 + 0.08 * (0.5 + 0.5 * Math.sin(tsec * 1.3 + i * 1.7 + li));
           const lit = hot && (hot === a || hot === b);
-          ctx.strokeStyle = lit ? "rgba(196,181,253,0.65)" : `rgba(139,92,246,${strength})`;
+          ctx.strokeStyle = lit ? "rgba(255,194,71,0.85)" : `rgba(230,57,54,${strength + 0.1})`;
           ctx.lineWidth = lit ? 1.2 : 0.8;
           const bend = 26 + Math.abs(a.y - b.y) * 0.28;
           ctx.beginPath(); ctx.moveTo(a.x, a.y);
@@ -169,27 +169,27 @@ export function NeuralField() {
           halo.addColorStop(0, color(k, 0.35)); halo.addColorStop(1, color(k, 0));
           ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(n.x, n.y, 26, 0, Math.PI * 2); ctx.fill();
         }
-        ctx.fillStyle = "#04060c";
+        ctx.fillStyle = "#101114";
         ctx.beginPath(); ctx.arc(n.x, n.y, r + 2, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = color(k, isHot ? 1 : 0.55 + breathe * 0.4);
         ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2); ctx.fill();
       }
 
       // layer captions + token text
-      ctx.font = `500 10px ${mono}`;
+      ctx.font = `500 11px ${mono}`;
       ctx.textAlign = "center";
       nodes.forEach((col, l) => {
-        ctx.fillStyle = "rgba(138,150,171,0.75)";
+        ctx.fillStyle = "rgba(245,240,230,0.8)";
         ctx.fillText(LAYERS[l].name, col[0].x, h * 0.08);
       });
       ctx.textAlign = "right";
       nodes[0].forEach((n, i) => {
-        ctx.fillStyle = hot === n ? "rgba(165,243,252,1)" : "rgba(138,150,171,0.6)";
+        ctx.fillStyle = hot === n ? "rgba(40,191,255,1)" : "rgba(245,240,230,0.7)";
         ctx.fillText(TOKENS[i], n.x - 12, n.y + 3);
       });
       ctx.textAlign = "left";
       nodes[nodes.length - 1].forEach((n, i) => {
-        ctx.fillStyle = hot === n ? "rgba(221,214,254,1)" : "rgba(138,150,171,0.6)";
+        ctx.fillStyle = hot === n ? "rgba(255,194,71,1)" : "rgba(245,240,230,0.7)";
         ctx.fillText(OUTS[i], n.x + 12, n.y + 3);
       });
 
@@ -225,16 +225,16 @@ export function NeuralField() {
   }, []);
 
   return (
-    <div className="glass relative overflow-hidden rounded-2xl">
+    <div className="hud hud-scan">
       <div className="flex items-center justify-between border-b border-line px-4 py-2.5">
         <div className="flex items-center gap-1.5" aria-hidden="true">
-          <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
-          <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
-          <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
+          <span className="h-2 w-2 bg-red" />
+          <span className="h-2 w-2 bg-gold" />
+          <span className="h-2 w-2 bg-blue" />
         </div>
         <p className="font-mono text-[11px] text-muted">model.forward(query)</p>
-        <p className="flex items-center gap-1.5 font-mono text-[11px] text-cyan">
-          <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-cyan" /> live
+        <p className="flex items-center gap-1.5 font-mono text-[11px] text-gold">
+          <span className="pulse-dot h-1.5 w-1.5 bg-red" /> live
         </p>
       </div>
       <div ref={wrap} className="relative aspect-[5/4] w-full sm:aspect-[16/12]">

@@ -16,31 +16,31 @@ export function MetricRings({ metrics, note }: { metrics: Metric[]; note?: strin
     <div ref={ref}>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {metrics.map((m, i) => (
-          <div key={m.label} className="flex flex-col items-center rounded-xl border border-line bg-white/[0.015] px-2 py-4">
+          <div key={m.label} className="flex flex-col items-center border-2 border-line-strong px-2 py-4">
             <div className="relative h-20 w-20">
             <svg viewBox="0 0 80 80" className="h-20 w-20 -rotate-90" aria-hidden="true">
               <defs>
                 <linearGradient id={`g-${i}`} x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#22d3ee" />
-                  <stop offset="100%" stopColor="#8b5cf6" />
+                  <stop offset="0%" stopColor="#ffc247" />
+                  <stop offset="100%" stopColor="#ff6b35" />
                 </linearGradient>
               </defs>
-              <circle cx="40" cy="40" r={R} fill="none" stroke="rgba(148,163,184,0.12)" strokeWidth="5" />
+              <circle cx="40" cy="40" r={R} fill="none" stroke="rgba(245,240,230,0.14)" strokeWidth="6" />
               <motion.circle
                 cx="40"
                 cy="40"
                 r={R}
                 fill="none"
                 stroke={`url(#g-${i})`}
-                strokeWidth="5"
-                strokeLinecap="round"
+                strokeWidth="6"
+                strokeLinecap="butt"
                 strokeDasharray={C}
                 initial={{ strokeDashoffset: reduce ? C * (1 - m.value / 100) : C }}
                 animate={inView ? { strokeDashoffset: C * (1 - m.value / 100) } : undefined}
                 transition={{ duration: 1.4, delay: 0.1 * i, ease: [0.22, 1, 0.36, 1] }}
               />
             </svg>
-            <p className="absolute inset-0 grid place-items-center font-mono text-[14px] font-semibold text-text">{m.display}</p>
+            <p className="absolute inset-0 grid place-items-center font-display text-[15px] font-extrabold text-text">{m.display}</p>
             </div>
             <p className="mt-2 text-[12px] text-muted">{m.label}</p>
           </div>

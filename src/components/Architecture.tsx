@@ -69,9 +69,9 @@ export function Architecture() {
   };
 
   return (
-    <section id="architecture" className="relative py-28 md:py-36">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-line-strong to-transparent" />
-      <div aria-hidden="true" className="grid-bg pointer-events-none absolute inset-0 opacity-60" />
+    <section id="architecture" className="relative overflow-hidden bg-ink py-20 md:py-28">
+      <div aria-hidden="true" className="blueprint-blue pointer-events-none absolute inset-0" />
+      <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-1/3 hidden h-40 w-[130%] -rotate-6 bg-graphite/80 lg:block" />
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeader
           index="04"
@@ -85,7 +85,7 @@ export function Architecture() {
         />
 
         <Reveal>
-          <div role="tablist" aria-label="Architectures" className="-mx-4 mb-6 flex gap-2 overflow-x-auto px-4 pb-1">
+          <div role="tablist" aria-label="Architectures" className="-mx-4 mb-8 flex gap-3 overflow-x-auto px-4 pb-2">
             {diagrams.map((x, i) => (
               <button
                 key={x.id}
@@ -93,11 +93,11 @@ export function Architecture() {
                 type="button"
                 aria-selected={i === di}
                 onClick={() => { setDi(i); setSel(diagrams[i].nodes[0].id); setPlaying(false); }}
-                className={`shrink-0 rounded-lg border px-3.5 py-2 font-mono text-[12px] transition ${
-                  i === di ? "border-cyan/40 bg-cyan/[0.08] text-text" : "border-line text-muted hover:border-line-strong hover:text-text"
+                className={`shrink-0 border-2 px-4 py-2.5 font-mono text-[12px] font-semibold transition ${
+                  i === di ? "border-ink bg-blue text-ink shadow-[4px_4px_0_0_var(--gold)]" : "border-line-strong text-text hover:border-blue hover:text-blue"
                 }`}
               >
-                <span className="mr-2 text-faint">{String(i + 1).padStart(2, "0")}</span>
+                <span className={`mr-2 ${i === di ? "text-ink/70" : "text-faint"}`}>{String(i + 1).padStart(2, "0")}</span>
                 {x.label}
               </button>
             ))}
@@ -105,13 +105,13 @@ export function Architecture() {
         </Reveal>
 
         <Reveal delay={0.05}>
-          <div className="card overflow-hidden rounded-2xl">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3">
-              <p className="text-[14px] text-muted">{d.summary}</p>
+          <div className="hud bg-graphite shadow-[10px_10px_0_0_var(--blue)]">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-line-strong px-5 py-3">
+              <p className="text-[14px] font-medium text-text">{d.summary}</p>
               <button
                 type="button"
                 onClick={togglePlay}
-                className="inline-flex items-center gap-2 rounded-lg border border-line-strong bg-white/[0.03] px-3 py-1.5 font-mono text-[12px] text-text transition hover:border-cyan/50"
+                className="inline-flex min-h-10 items-center gap-2 border-2 border-ink bg-gold px-3.5 font-mono text-[12px] font-bold text-ink shadow-[3px_3px_0_0_var(--red)] transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5"
               >
                 {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
                 {playing ? "Pause" : "Trace data flow"}
@@ -124,11 +124,11 @@ export function Architecture() {
                 <svg viewBox="-10 20 1020 420" className="h-auto w-full" role="group" aria-label={`${d.label} diagram`}>
                   <defs>
                     <linearGradient id="edge-hot" x1="0" x2="1">
-                      <stop offset="0%" stopColor="#22d3ee" />
-                      <stop offset="100%" stopColor="#8b5cf6" />
+                      <stop offset="0%" stopColor="#ff6b35" />
+                      <stop offset="100%" stopColor="#ffc247" />
                     </linearGradient>
                     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M0 0 L10 5 L0 10 z" fill="rgba(148,163,184,0.45)" />
+                      <path d="M0 0 L10 5 L0 10 z" fill="rgba(245,240,230,0.5)" />
                     </marker>
                   </defs>
                   <AnimatePresence mode="wait">
@@ -138,8 +138,8 @@ export function Architecture() {
                         const p = edgePath(d, a, b);
                         return (
                           <g key={`${a}-${b}`}>
-                            <path d={p} fill="none" stroke="rgba(148,163,184,0.18)" strokeWidth="1.2" markerEnd="url(#arrow)" />
-                            {hot && <path d={p} fill="none" stroke="url(#edge-hot)" strokeWidth="1.8" className={reduce ? "" : "edge-flow"} />}
+                            <path d={p} fill="none" stroke="rgba(245,240,230,0.28)" strokeWidth="1.4" markerEnd="url(#arrow)" />
+                            {hot && <path d={p} fill="none" stroke="url(#edge-hot)" strokeWidth="2.6" className={reduce ? "" : "edge-flow"} />}
                           </g>
                         );
                       })}
@@ -157,23 +157,23 @@ export function Architecture() {
                             onKeyDown={(e) => {
                               if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setPlaying(false); setSel(n.id); }
                             }}
-                            className="cursor-pointer outline-none [&:focus-visible>rect]:stroke-cyan"
+                            className="cursor-pointer outline-none [&:focus-visible>rect:last-of-type]:stroke-gold"
                             style={{ transition: "opacity .3s" }}
-                            opacity={on || near || !sel ? 1 : 0.55}
+                            opacity={on || near || !sel ? 1 : 0.72}
                           >
-                            {on && <rect x={n.x - NW / 2 - 6} y={n.y - NH / 2 - 6} width={NW + 12} height={NH + 12} rx="14" fill="rgba(34,211,238,0.08)" />}
+                            {on && <rect x={n.x - NW / 2 + 6} y={n.y - NH / 2 + 6} width={NW} height={NH} fill="#e63936" />}
                             <rect
                               x={n.x - NW / 2}
                               y={n.y - NH / 2}
                               width={NW}
                               height={NH}
-                              rx="10"
-                              fill={on ? "#0f1a2b" : "#0a101b"}
-                              stroke={on ? "#22d3ee" : near ? "rgba(139,92,246,0.6)" : "rgba(148,163,184,0.22)"}
-                              strokeWidth={on ? 1.5 : 1}
+                              rx="0"
+                              fill={on ? "#ffc247" : "#101114"}
+                              stroke={on ? "#101114" : near ? "#28bfff" : "rgba(245,240,230,0.4)"}
+                              strokeWidth={on ? 2.5 : 1.6}
                             />
-                            <circle cx={n.x - NW / 2 + 14} cy={n.y} r="3" fill={on ? "#22d3ee" : near ? "#8b5cf6" : "#334155"} />
-                            <text x={n.x + 6} y={n.y + 4.5} textAnchor="middle" fontSize="13" fill={on ? "#e7ecf5" : "#aab4c5"} style={{ fontFamily: "var(--font-geist-mono)" }}>
+                            <circle cx={n.x - NW / 2 + 14} cy={n.y} r="3" fill={on ? "#e63936" : near ? "#28bfff" : "#8e8a80"} />
+                            <text x={n.x + 6} y={n.y + 4.5} textAnchor="middle" fontSize="13" fill={on ? "#101114" : "#f5f0e6"} fontWeight={on ? 700 : 500} style={{ fontFamily: "var(--font-plex-mono)" }}>
                               {n.label}
                             </text>
                           </g>
@@ -195,11 +195,11 @@ export function Architecture() {
                         type="button"
                         onClick={() => { setPlaying(false); setSel(id); }}
                         aria-pressed={on}
-                        className={`flex w-full items-center gap-3 rounded-lg border px-3 py-2.5 text-left font-mono text-[12.5px] transition ${
-                          on ? "border-cyan/50 bg-cyan/[0.07] text-text" : "border-line text-muted"
+                        className={`flex min-h-11 w-full items-center gap-3 border-2 px-3 py-2.5 text-left font-mono text-[12.5px] font-medium transition ${
+                          on ? "border-ink bg-gold text-ink shadow-[3px_3px_0_0_var(--red)]" : "border-line-strong text-text"
                         }`}
                       >
-                        <span className="text-faint">{String(i + 1).padStart(2, "0")}</span>
+                        <span className={on ? "text-ink/70" : "text-faint"}>{String(i + 1).padStart(2, "0")}</span>
                         {n.label}
                       </button>
                     </li>
@@ -207,13 +207,13 @@ export function Architecture() {
                 })}
               </ol>
 
-              <aside className="grid gap-6 border-t border-line p-6 md:grid-cols-[180px_1fr_260px] md:items-start md:gap-10" aria-live="polite">
+              <aside className="grid gap-6 border-t-2 border-line-strong p-6 md:grid-cols-[180px_1fr_260px] md:items-start md:gap-10" aria-live="polite">
                 <div>
                   <p className="font-mono text-[11px] text-faint">
                     step {String(step).padStart(2, "0")} / {String(order.length).padStart(2, "0")}
                   </p>
-                  <div className="mt-3 h-1 overflow-hidden rounded-full bg-white/[0.05]">
-                    <motion.div className="h-full bg-gradient-to-r from-cyan to-violet" animate={{ width: `${(step / order.length) * 100}%` }} transition={{ duration: 0.4 }} />
+                  <div className="mt-3 h-2 overflow-hidden border border-line-strong bg-ink">
+                    <motion.div className="h-full bg-gradient-to-r from-red to-gold" animate={{ width: `${(step / order.length) * 100}%` }} transition={{ duration: 0.4 }} />
                   </div>
                 </div>
                 <motion.div
@@ -222,11 +222,11 @@ export function Architecture() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.25 }}
                 >
-                  <h3 className="text-xl font-semibold tracking-tight text-text">{node.label}</h3>
+                  <h3 className="text-2xl font-extrabold tracking-tight text-gold">{node.label}</h3>
                   <p className="mt-2 text-pretty leading-relaxed text-muted">{node.detail}</p>
                 </motion.div>
-                <p className="text-[12.5px] leading-relaxed text-faint">
-                  <span className="eyebrow mb-1.5 block">Connected</span>
+                <p className="text-[12.5px] leading-relaxed text-muted">
+                  <span className="eyebrow mb-1.5 block text-blue">Connected</span>
                   {[...linked].filter((x) => x !== sel).map((x) => d.nodes.find((n) => n.id === x)!.label).join(" · ") || "none"}
                 </p>
               </aside>
