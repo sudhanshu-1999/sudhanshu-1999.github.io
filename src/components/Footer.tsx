@@ -28,7 +28,7 @@ export function Footer() {
       </div>
       <div className="relative mx-auto flex max-w-6xl flex-wrap justify-between gap-2 border-t-2 border-line-strong px-4 py-5 font-mono text-[11px] text-muted sm:px-6">
         <span>© {new Date().getFullYear()} {site.name}</span>
-        <span>Built with Next.js, TypeScript, Tailwind &amp; Motion</span>
+        <span>&ldquo;Sometimes you gotta run before you can walk.&rdquo; &mdash; Tony Stark</span>
       </div>
     </footer>
   );
