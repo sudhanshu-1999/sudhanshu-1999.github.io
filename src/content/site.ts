@@ -345,6 +345,38 @@ export const projects: Project[] = [
     codeNote: "source code is private",
     accent: "blue",
   },
+  {
+    slug: "ml-ai-revision-explainer",
+    index: "07",
+    title: "ML & AI Revision Explainer",
+    kicker: "Animated, prerequisite-ordered notes from neural networks to agentic AI",
+    year: "2026",
+    category: "Full-Stack",
+    summary:
+      "A comic-styled learning site with 29 topics across machine learning, deep learning, transformers and agentic AI. Every topic has a written explainer and a small interactive animation you can step through.",
+    problem:
+      "Revision notes for ML and agentic AI are usually flat text, but ideas like backpropagation, attention or an agent loop only stick when you can watch them move, and topics only make sense in prerequisite order.",
+    architecture: ["Topic JSON", "Prerequisite graph", "Astro static pages", "Svelte animation islands", "Vercel deploy"],
+    implementation: [
+      "One JSON file per topic holds the explainer: summary, glossary, code examples, pitfalls and scenario-style interview questions. A shared template renders every page the same way.",
+      "A concept map is generated from each topic's prerequisites, so adding a topic only means adding its data and its animation.",
+      "Each animation is a self-contained Svelte 5 component that hydrates only when scrolled into view, keeping pages light.",
+      "The agentic AI section has 13 topics on building agents with Claude: the agent loop, multi-agent coordination, tools and MCP, hooks, structured extraction, batching and context management.",
+      "Pushing to GitHub redeploys the site on Vercel automatically.",
+    ],
+    challenges: [
+      "Keeping 29 animations independent and fast, so each is its own island with no shared runtime state.",
+      "Keeping technical claims honest: API behaviour was checked against Anthropic's official documentation, and rules of thumb are labelled as such.",
+    ],
+    stack: ["Astro", "Svelte 5", "TypeScript", "D3", "Vercel"],
+    demo: "https://ml-ai-revision-explainer.vercel.app",
+    codeNote: "source code is private",
+    metrics: [
+      { label: "Topics", value: 29, display: "29" },
+      { label: "Interactive animations", value: 29, display: "29" },
+    ],
+    accent: "cyan",
+  },
 ];
 
 export type ArchNode = { id: string; label: string; detail: string; x: number; y: number };
