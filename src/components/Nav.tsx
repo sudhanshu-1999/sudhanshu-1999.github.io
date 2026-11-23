@@ -55,7 +55,7 @@ export function Nav() {
             SS
             <span className="absolute bottom-1 left-1 h-1 w-1 bg-red" />
           </span>
-          <span className="hidden font-display text-sm font-semibold tracking-tight text-text sm:block">Sudhanshu Singh</span>
+          <span className="hidden font-display text-sm font-semibold tracking-tight text-text lg:block">Sudhanshu Singh</span>
         </a>
 
         <ul className="hidden items-center gap-1 md:flex">
@@ -64,7 +64,7 @@ export function Nav() {
               <a
                 href={`#${n.id}`}
                 aria-current={active === n.id ? "true" : undefined}
-                className={`group relative z-0 block px-3.5 py-2 text-[13px] transition-colors ${
+                className={`group relative z-0 block px-2.5 py-2 text-[13px] lg:px-3.5 transition-colors ${
                   active === n.id ? "text-ink font-semibold" : "text-muted hover:text-text"
                 }`}
               >

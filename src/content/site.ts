@@ -22,6 +22,7 @@ export const nav = [
   { id: "work", label: "Work" },
   { id: "architecture", label: "Architecture" },
   { id: "experience", label: "Experience" },
+  { id: "exploring", label: "Exploring" },
   { id: "contact", label: "Contact" },
 ];
 
