@@ -19,7 +19,7 @@ Existing: Next.js 16 static export (`output: "export"`), React 19, TypeScript, T
 
 ## Product Purpose
 
-A personal portfolio for an AI engineer: shows 3.5+ years of production enterprise software, agentic and RAG systems, case studies with real architecture diagrams, and a way to make contact. Success is a visitor who opens the resume, a case study or the contact form.
+A personal portfolio for an AI engineer: shows 4 years of production enterprise software, agentic and RAG systems, case studies with real architecture diagrams, and a way to make contact. Success is a visitor who opens the resume, a case study or the contact form.
 
 ## Positioning
 

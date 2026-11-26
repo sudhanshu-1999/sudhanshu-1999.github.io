@@ -6,6 +6,7 @@ import { useState, type KeyboardEvent } from "react";
 import { skillGroups } from "@/content/site";
 import { SectionHeader } from "./ui/SectionHeader";
 import { Reveal } from "./ui/Reveal";
+import { TechMarquee } from "./ui/TechMarquee";
 
 const icons = { ai: Brain, ml: Cpu, backend: Server, cloud: Cloud, tools: Wrench } as const;
 const marks = ["bg-gold", "bg-orange", "bg-blue", "bg-red"] as const;
@@ -131,6 +132,9 @@ export function Arsenal() {
             </AnimatePresence>
           </div>
         </div>
+      </div>
+      <div className="relative mt-16 md:mt-20">
+        <TechMarquee />
       </div>
     </section>
   );

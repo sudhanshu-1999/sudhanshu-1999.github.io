@@ -527,6 +527,13 @@
 ::-webkit-scrollbar-thumb:hover { background: var(--orange); }
 html { scrollbar-color: var(--red) var(--bg); }
 
+/* Tech marquee (TechMarquee.tsx): two identical rows slide by one row width, so the loop is seamless. */
+.marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.marquee-track { display: flex; width: max-content; animation: marquee 90s linear infinite; }
+.marquee:hover .marquee-track, .marquee:focus-within .marquee-track { animation-play-state: paused; }
+.marquee-row { display: flex; flex-shrink: 0; gap: 0.75rem; padding-right: 0.75rem; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
 /* Reduced motion: stop ambient loops and sweeps; colour/opacity state changes stay. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -541,6 +548,10 @@ html { scrollbar-color: var(--red) var(--bg); }
   .scroll-cue,
   .edge-flow,
   .pulse-dot { animation: none; }
+  .marquee { -webkit-mask-image: none; mask-image: none; }
+  .marquee-track { width: auto; padding: 0 1rem; animation: none; }
+  .marquee-row { flex-shrink: 1; min-width: 0; flex-wrap: wrap; padding-right: 0; }
+  .marquee-row[aria-hidden="true"] { display: none; }
   .btn-primary:hover,
   .btn-primary:active { transform: none; }
   .tilt { transform: none; }

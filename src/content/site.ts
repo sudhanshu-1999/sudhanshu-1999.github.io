@@ -28,7 +28,7 @@ export const nav = [
 
 // Verified numbers only.
 export const stats = [
-  { value: 3.5, decimals: 1, suffix: "+", label: "Years shipping production enterprise systems", note: "Nov 2022 – present" },
+  { value: 4, decimals: 0, suffix: "", label: "Years shipping production enterprise systems", note: "Nov 2022 – present" },
   { value: 7, decimals: 0, suffix: "", label: "Cloud Run services in the DocuMind RAG platform", note: "Terraform-provisioned" },
   { value: 0.909, decimals: 3, suffix: "", label: "mAP@50 on the YOLOv8 fall-detection capstone", note: "899-image validation set" },
   { value: 7, decimals: 0, suffix: "", label: "Certifications across Anthropic and Salesforce", note: "4 Anthropic · 3 Salesforce" },
@@ -379,103 +379,13 @@ export const projects: Project[] = [
   },
 ];
 
-export type ArchNode = { id: string; label: string; detail: string; x: number; y: number };
-export type ArchDiagram = {
-  id: string;
-  label: string;
-  summary: string;
-  nodes: ArchNode[];
-  edges: [string, string][];
-};
-
-// Coordinates on a 1000 x 420 canvas.
-export const diagrams: ArchDiagram[] = [
-  {
-    id: "rag",
-    label: "RAG Pipeline",
-    summary: "Answers grounded in retrieved evidence, with citations and an explicit refusal path.",
-    nodes: [
-      { id: "q", label: "User query", x: 80, y: 210, detail: "The question arrives with the caller's identity so retrieval can be filtered to their tenant." },
-      { id: "rw", label: "Query rewrite", x: 225, y: 210, detail: "Optional rewrite / expansion so short or ambiguous questions retrieve well." },
-      { id: "bm", label: "BM25", x: 385, y: 120, detail: "Sparse keyword retrieval — catches exact terms, IDs and names that embeddings blur." },
-      { id: "dn", label: "Dense vectors", x: 385, y: 300, detail: "Embedding similarity search (HNSW / IVF) for meaning-level matches." },
-      { id: "rrf", label: "RRF fusion", x: 545, y: 210, detail: "Reciprocal Rank Fusion merges both result lists without tuning score scales." },
-      { id: "rr", label: "Re-rank", x: 705, y: 210, detail: "A cross-encoder / ranking API reorders the short list; low-relevance chunks are thresholded out." },
-      { id: "llm", label: "LLM + context", x: 880, y: 140, detail: "Token-budgeted context, structured output, streaming. Refuses when evidence is missing." },
-      { id: "cite", label: "Cited answer", x: 880, y: 290, detail: "Every claim points back to its source chunk, so users can verify it." },
-    ],
-    edges: [["q", "rw"], ["rw", "bm"], ["rw", "dn"], ["bm", "rrf"], ["dn", "rrf"], ["rrf", "rr"], ["rr", "llm"], ["llm", "cite"]],
-  },
-  {
-    id: "agent",
-    label: "Agent Workflow",
-    summary: "A typed state graph: plan, call tools, observe, checkpoint — and pause for a human when it matters.",
-    nodes: [
-      { id: "in", label: "Task", x: 70, y: 210, detail: "Input enters a typed state object with reducers, not a free-form chat log." },
-      { id: "pl", label: "Planner", x: 230, y: 210, detail: "Decides the next step (ReAct or plan-and-execute) via conditional routing." },
-      { id: "tl", label: "Tool call", x: 420, y: 110, detail: "Schema-validated tool I/O (Pydantic / JSON Schema), least-privilege credentials." },
-      { id: "mcp", label: "MCP servers", x: 600, y: 110, detail: "Tools and retrieval exposed over the Model Context Protocol." },
-      { id: "ob", label: "Observe", x: 510, y: 250, detail: "Results are validated and written back into state; errors become data, not crashes." },
-      { id: "ck", label: "Checkpoint", x: 690, y: 320, detail: "Durable state after every step, so long runs resume after failure instead of restarting." },
-      { id: "hitl", label: "Human review", x: 760, y: 200, detail: "interrupt() pauses the graph for approval on risky actions." },
-      { id: "out", label: "Result", x: 920, y: 210, detail: "Final answer plus the trajectory, which is what evaluation scores." },
-    ],
-    edges: [["in", "pl"], ["pl", "tl"], ["tl", "mcp"], ["mcp", "ob"], ["ob", "pl"], ["ob", "ck"], ["ck", "hitl"], ["hitl", "out"]],
-  },
-  {
-    id: "llmapp",
-    label: "LLM Application",
-    summary: "The production shell around a model: guardrails, routing, caching, budgets and evaluation.",
-    nodes: [
-      { id: "cl", label: "Client", x: 70, y: 210, detail: "Web UI, chat or another agent (A2A)." },
-      { id: "gw", label: "API + auth", x: 220, y: 210, detail: "Identity, tenant mapping and per-request audit logging." },
-      { id: "gin", label: "Input rails", x: 370, y: 120, detail: "PII redaction, prompt-injection containment, policy checks before the model sees anything." },
-      { id: "cache", label: "Cache", x: 370, y: 300, detail: "Answer cache and provider context caching cut repeat cost and latency." },
-      { id: "rt", label: "Model router", x: 540, y: 210, detail: "Complexity-based routing (small / medium / large) behind a monthly budget breaker." },
-      { id: "m", label: "LLM", x: 690, y: 210, detail: "Prompt-versioned calls with structured output." },
-      { id: "gout", label: "Output rails", x: 830, y: 120, detail: "Groundedness and schema checks before anything reaches the user." },
-      { id: "ev", label: "Eval + metrics", x: 830, y: 300, detail: "Golden sets, LLM-as-a-judge, CI regression gates, usage tracking." },
-    ],
-    edges: [["cl", "gw"], ["gw", "gin"], ["gw", "cache"], ["gin", "rt"], ["cache", "rt"], ["rt", "m"], ["m", "gout"], ["m", "ev"]],
-  },
-  {
-    id: "ingest",
-    label: "Document Ingestion",
-    summary: "Event-driven and failure-tolerant: no document is silently lost or indexed twice.",
-    nodes: [
-      { id: "up", label: "Upload", x: 70, y: 210, detail: "Files land in object storage, tagged with tenant metadata." },
-      { id: "ps", label: "Pub/Sub event", x: 220, y: 210, detail: "Storage events fan out to workers — decoupled and scalable." },
-      { id: "wk", label: "Worker", x: 370, y: 210, detail: "Pulls jobs, with exponential-backoff retries on transient errors." },
-      { id: "dlq", label: "Dead-letter", x: 370, y: 350, detail: "Poison documents are parked for inspection instead of blocking the queue." },
-      { id: "pa", label: "Parse", x: 520, y: 120, detail: "Document AI / Docling turn PDFs and Office files into structured text." },
-      { id: "ch", label: "Chunk", x: 690, y: 120, detail: "Structure-aware chunking sized for retrieval, not for the context window." },
-      { id: "em", label: "Embed", x: 800, y: 260, detail: "Embedding model turns each chunk into a vector." },
-      { id: "ix", label: "Index", x: 925, y: 210, detail: "Vector index plus keyword index, updated incrementally on re-ingest." },
-    ],
-    edges: [["up", "ps"], ["ps", "wk"], ["wk", "dlq"], ["wk", "pa"], ["pa", "ch"], ["ch", "em"], ["em", "ix"]],
-  },
-  {
-    id: "async",
-    label: "Async AI API",
-    summary: "Submit → poll → retrieve, so slow models never cause timeouts or duplicate writes.",
-    nodes: [
-      { id: "sys", label: "Calling system", x: 80, y: 210, detail: "An enterprise platform with hard callout timeouts." },
-      { id: "sub", label: "POST /submit", x: 250, y: 210, detail: "Validates input and returns 202 + job id immediately." },
-      { id: "idem", label: "Idempotency", x: 250, y: 340, detail: "Key = record + task + content hash. A duplicate returns the existing job." },
-      { id: "q", label: "Job queue", x: 430, y: 210, detail: "Per-job isolation: one bad document cannot stall the rest." },
-      { id: "inf", label: "Inference", x: 600, y: 120, detail: "Model call with bounded retries, backoff and jitter on retryable errors only." },
-      { id: "poll", label: "GET /jobs/{id}", x: 600, y: 310, detail: "Status polling: queued / processing / succeeded / failed." },
-      { id: "cb", label: "Signed callback", x: 790, y: 120, detail: "Result pushed back to an allow-listed host with a verified token." },
-      { id: "rec", label: "Record update", x: 920, y: 240, detail: "Idempotent write on the receiving side — safe under at-least-once delivery." },
-    ],
-    edges: [["sys", "sub"], ["sub", "idem"], ["sub", "q"], ["q", "inf"], ["q", "poll"], ["inf", "cb"], ["cb", "rec"], ["poll", "rec"]],
-  },
-];
-
 export const experience = [
   {
     kind: "work" as const,
     title: "Software Engineer",
+    step: 2,
+    short: "Software Engineer",
+    skills: ["Apex", "Lightning Web Components", "Flow", "Async AI pipelines", "LLM document extraction", "Retrieval", "Idempotent callbacks", "Release ownership"],
     org: "CloudMetic",
     period: "Nov 2022 – Present",
     place: "India",
@@ -490,6 +400,9 @@ export const experience = [
   {
     kind: "edu" as const,
     title: "Advanced AI & Deep Learning Programme",
+    step: 3,
+    short: "AI & Deep Learning",
+    skills: ["LLMs", "RAG", "LangGraph", "AI agents", "NLP", "Computer vision", "Transformers", "YOLOv8"],
     org: "IIT Delhi",
     period: "Completed",
     place: "",
@@ -499,6 +412,9 @@ export const experience = [
   {
     kind: "edu" as const,
     title: "GenAI Engineering: Build, Scale & Deploy AI Systems",
+    step: 4,
+    short: "GenAI Engineering",
+    skills: ["Agent architectures", "Memory systems", "Multi-agent orchestration", "Tool use & MCP", "Guardrails", "LLMOps"],
     org: "Professional programme",
     period: "2026",
     place: "",
@@ -508,6 +424,9 @@ export const experience = [
   {
     kind: "edu" as const,
     title: "B.Tech, Electrical & Electronics Engineering",
+    step: 1,
+    short: "B.Tech",
+    skills: ["Electrical & Electronics Engineering"],
     org: "ABES Engineering College",
     period: "2017 – 2021",
     place: "India",

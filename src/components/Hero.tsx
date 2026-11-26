@@ -17,7 +17,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 // Floating indicators reuse the verified figures from `stats`; nothing new is claimed.
 const chips = [
-  { v: `${stats[0].value.toFixed(1)}${stats[0].suffix}`, l: "yrs in production", cls: "-top-10 left-6", color: "bg-gold", delay: "0s" },
+  { v: `${stats[0].value.toFixed(stats[0].decimals)}${stats[0].suffix}`, l: "yrs in production", cls: "-top-10 left-6", color: "bg-gold", delay: "0s" },
   { v: `${stats[2].value.toFixed(3)}`, l: "mAP@50 · YOLOv8", cls: "-right-8 top-[38%]", color: "bg-blue", delay: "1.4s" },
   { v: `${stats[1].value}`, l: "Cloud Run services", cls: "-bottom-10 left-1/2", color: "bg-orange", delay: "2.6s" },
 ];
@@ -126,7 +126,7 @@ export function Hero() {
           </motion.p>
 
           <motion.p {...item(0.26)} className="mt-4 max-w-xl text-pretty leading-relaxed text-muted">
-            AI engineer with 3.5+ years shipping production enterprise software, now building agentic systems, RAG
+            AI engineer with 4 years shipping production enterprise software, now building agentic systems, RAG
             platforms and the reliable backends underneath them: async pipelines, typed tool contracts and evaluation
             that catches regressions before users do.
           </motion.p>
